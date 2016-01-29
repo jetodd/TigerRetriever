@@ -3,7 +3,7 @@
 Install node from nodejs website
 
 ```
-npm install -g http-server gulp
+npm install -g http-server
 ```
 
 ```
@@ -12,9 +12,6 @@ npm install
 
 ```
 http-server .
-```
-```
-gulp
 ```
 
 

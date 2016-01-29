@@ -19,13 +19,8 @@
   "homepage": "https://github.com/josh-taylr/TigerRetriever#readme",
   "dependencies": {
     "phaser": "^2.4.4",
-    "requirejs": "^2.1.22"
   },
   "devDependencies": {
-    "browserify": "^13.0.0",
-    "gulp": "^3.9.0",
-    "gulp-live-server": "0.0.29",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.7.0"
+    "http-server": "^3.7.0"
   }
 }
