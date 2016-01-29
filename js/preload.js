@@ -14,10 +14,13 @@ TigerRetriever.Preload.prototype = {
 
         //load game assets
 
-        this.load.image('sky', 'assets/sky.png');
-        this.load.image('ground', 'assets/platform.png');
-        this.load.image('star', 'assets/star.png');
-        this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+        this.load.tilemap('level1', 'assets/tilemaps/level1.json', null, Phaser.Tilemap.TILED_JSON);
+        this.load.image('gameTiles', 'assets/images/tiles_spritesheet.png');
+        this.load.image('player', 'assets/images/player.png');
+        this.load.image('playerDuck', 'assets/images/player_duck.png');
+        this.load.image('playerDead', 'assets/images/player_dead.png');
+        this.load.image('goldCoin', 'assets/images/goldCoin.png');
+        this.load.audio('coin', ['assets/audio/coin.ogg', 'assets/audio/coin.mp3']);
     },
     create: function() {
         this.state.start('Game');

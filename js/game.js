@@ -1,87 +1,141 @@
 var TigerRetriever = TigerRetriever || {};
 
-TigerRetriever.Game = function () {
-};
+TigerRetriever.Game = function(){};
 
 TigerRetriever.Game.prototype = {
-    preload: function () {
+    preload: function() {
         this.game.time.advancedTiming = true;
     },
-    create: function () {
-        this.game.camera.follow(this.player);
+    create: function() {
+        this.map = this.game.add.tilemap('level1');
 
-        this.add.sprite(0, 0, 'sky');
+        //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
+        this.map.addTilesetImage('tiles_spritesheet', 'gameTiles');
 
-        this.scoreText = this.add.text(16, 16, 'score: 0', {fontSize: '32px', fill: '#000'});
-        this.score = 0;
+        //create layers
+        this.backgroundlayer = this.map.createLayer('backgroundLayer');
+        this.blockedLayer = this.map.createLayer('blockedLayer');
 
-        this.platforms = this.game.add.group();
-        this.platforms.enableBody = true;
+        //collision on blockedLayer
+        this.map.setCollisionBetween(1, 5000, true, 'blockedLayer');
 
-        this.ground = this.platforms.create(0, this.game.world.height - 64, 'ground');
+        //resizes the game world to match the layer dimensions
+        this.backgroundlayer.resizeWorld();
 
-        //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-        this.ground.scale.setTo(2, 2);
+        //create player
+        this.player = this.game.add.sprite(100, 300, 'player');
 
-        //  This stops it from falling away when you jump on it
-        this.ground.body.immovable = true;
-
-        this.player = this.game.add.sprite(32, this.game.world.height - 150, 'dude');
-
-        //  We need to enable physics on the player
+        //enable physics on the player
         this.game.physics.arcade.enable(this.player);
 
-        //  Player physics properties. Give the little guy a slight bounce.
-        this.player.body.bounce.y = 0.2;
-        this.player.body.gravity.y = 300;
-        this.player.body.collideWorldBounds = true;
+        //player gravity
+        this.player.body.gravity.y = 1000;
 
-        //  Our two animations, walking left and right.
-        this.player.animations.add('left', [0, 1, 2, 3], 10, true);
-        this.player.animations.add('right', [5, 6, 7, 8], 10, true);
+        //properties when the player is ducked and standing, so we can use in update()
+        var playerDuckImg = this.game.cache.getImage('playerDuck');
+        this.player.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
+        this.player.standDimensions = {width: this.player.width, height: this.player.height};
+        this.player.anchor.setTo(0.5, 1);
+
+        //the camera will follow the player in the world
+        this.game.camera.follow(this.player);
 
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
+        //sounds
+        this.coinSound = this.game.add.audio('coin');
     },
-    getRandomInt: function (min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
+
+    //find objects in a Tiled layer that containt a property called "type" equal to a certain value
+    findObjectsByType: function(type, map, layerName) {
+        var result = new Array();
+        map.objects[layerName].forEach(function(element){
+            if(element.properties.type === type) {
+                //Phaser uses top left, Tiled bottom left so we have to adjust
+                //also keep in mind that some images could be of different size as the tile size
+                //so they might not be placed in the exact position as in Tiled
+                element.y -= map.tileHeight;
+                result.push(element);
+            }
+        });
+        return result;
     },
-    update: function () {
+    //create a sprite from an object
+    createFromTiledObject: function(element, group) {
+        var sprite = group.create(element.x, element.y, element.properties.sprite);
+
+        //copy all properties to the sprite
+        Object.keys(element.properties).forEach(function(key){
+            sprite[key] = element.properties[key];
+        });
+    },
+    update: function() {
+        //collision
+        this.game.physics.arcade.collide(this.player, this.blockedLayer, this.playerHit, null, this);
+
         //only respond to keys and keep the speed if the player is alive
+        if(this.player.alive) {
+            this.player.body.velocity.x = 300;
 
-        this.game.physics.arcade.collide(this.player, this.platforms);
+            if(this.cursors.up.isDown) {
+                this.playerJump();
+            }
+            else if(this.cursors.down.isDown) {
+                this.playerDuck();
+            }
 
+            if(!this.cursors.down.isDown && this.player.isDucked && !this.pressingDown) {
+                //change image and update the body size for the physics engine
+                this.player.loadTexture('player');
+                this.player.body.setSize(this.player.standDimensions.width, this.player.standDimensions.height);
+                this.player.isDucked = false;
+            }
 
-        //  Reset the players velocity (movement)
-        this.player.body.velocity.x = 0;
-
-        if (this.cursors.left.isDown) {
-            //  Move to the left
-            this.player.body.velocity.x = -400;
-
-            this.player.animations.play('left');
-        }
-        else if (this.cursors.right.isDown) {
-            //  Move to the right
-            this.player.body.velocity.x = 400;
-
-            this.player.animations.play('right');
-        }
-        else {
-            //  Stand still
-            this.player.animations.stop();
-
-            this.player.frame = 4;
-        }
-
-        //  Allow the player to jump if they are touching the ground.
-        if (this.cursors.up.isDown && this.player.body.touching.down) {
-            this.player.body.velocity.y = -350;
+            //restart the game if reaching the edge
+            if(this.player.x >= this.game.world.width) {
+                this.game.state.start('Game');
+            }
         }
 
     },
-    render: function () {
+    playerHit: function(player, blockedLayer) {
+        //if hits on the right side, die
+        if(player.body.blocked.right) {
+
+            console.log(player.body.blocked);
+
+            //set to dead (this doesn't affect rendering)
+            this.player.alive = false;
+
+            //stop moving to the right
+            this.player.body.velocity.x = 0;
+
+            //change sprite image
+            this.player.loadTexture('playerDead');
+
+            //go to gameover after a few miliseconds
+            this.game.time.events.add(1500, this.gameOver, this);
+        }
+    },
+    gameOver: function() {
+        this.game.state.start('Game');
+    },
+    playerJump: function() {
+        if(this.player.body.blocked.down) {
+            this.player.body.velocity.y -= 700;
+        }
+    },
+    playerDuck: function() {
+        //change image and update the body size for the physics engine
+        this.player.loadTexture('playerDuck');
+        this.player.body.setSize(this.player.duckedDimensions.width, this.player.duckedDimensions.height);
+
+        //we use this to keep track whether it's ducked or not
+        this.player.isDucked = true;
+    },
+    render: function()
+    {
         this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
         this.game.debug.bodyInfo(this.player, 0, 80);
     }
