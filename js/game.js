@@ -22,23 +22,29 @@ TigerRetriever.Game.prototype = {
         //resizes the game world to match the layer dimensions
         this.backgroundlayer.resizeWorld();
 
-        //create player
-        this.player = this.game.add.sprite(100, 300, 'player');
+        //create herd
+        this.herd = [];
+        for (i = 0; i < 3; i++)
+        {
+            var animal = this.game.add.sprite(100 + i * 50, 300, 'player');
 
-        //enable physics on the player
-        this.game.physics.arcade.enable(this.player);
+            //enable physics on the player
+            this.game.physics.arcade.enable(animal);
 
-        //player gravity
-        this.player.body.gravity.y = 1000;
+            //player gravity
+            animal.body.gravity.y = 1000;
 
-        //properties when the player is ducked and standing, so we can use in update()
-        var playerDuckImg = this.game.cache.getImage('playerDuck');
-        this.player.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
-        this.player.standDimensions = {width: this.player.width, height: this.player.height};
-        this.player.anchor.setTo(0.5, 1);
+            //properties when the player is ducked and standing, so we can use in update()
+            var playerDuckImg = this.game.cache.getImage('playerDuck');
+            animal.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
+            animal.standDimensions = {width: animal.width, height: animal.height};
+            animal.anchor.setTo(0.5, 1);
+
+            this.herd.push(animal);
+        }
 
         //the camera will follow the player in the world
-        this.game.camera.follow(this.player);
+        this.game.camera.follow(this.herd[0]);
 
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -71,72 +77,101 @@ TigerRetriever.Game.prototype = {
         });
     },
     update: function() {
-        //collision
-        this.game.physics.arcade.collide(this.player, this.blockedLayer, this.playerHit, null, this);
+        //collisions
+        this.herd.forEach(function(animal) {
+            this.game.physics.arcade.collide(animal, this.blockedLayer, this.animalHit, null, this);
+        }, this);
 
         //only respond to keys and keep the speed if the player is alive
-        if(this.player.alive) {
-            this.player.body.velocity.x = 300;
+        //check herd still living animals
+        var alive = false;
+        this.herd.forEach(function (animal) {
+            if (animal.alive) {
+                alive = true;
+            }
+        });
+        if(alive) {
+            this.herd.forEach(function (animal) {
+                animal.body.velocity.x = 300;
+            });
 
             if(this.cursors.up.isDown) {
-                this.playerJump();
+                this.playersJump();
             }
             else if(this.cursors.down.isDown) {
-                this.playerDuck();
+                this.playersDuck();
             }
 
-            if(!this.cursors.down.isDown && this.player.isDucked && !this.pressingDown) {
+            if(!this.cursors.down.isDown && this.herd[0].isDucked && !this.pressingDown) {
                 //change image and update the body size for the physics engine
-                this.player.loadTexture('player');
-                this.player.body.setSize(this.player.standDimensions.width, this.player.standDimensions.height);
-                this.player.isDucked = false;
+                this.herd.forEach(function (animal) {
+                    animal.loadTexture('player');
+                    animal.body.setSize(animal.standDimensions.width, animal.standDimensions.height);
+                    animal.isDucked = false;
+                });
             }
 
             //restart the game if reaching the edge
-            if(this.player.x >= this.game.world.width) {
+            if(this.herd[0].x >= this.game.world.width) {
                 this.game.state.start('Game');
             }
         }
 
     },
-    playerHit: function(player, blockedLayer) {
+    animalHit: function(animal, blockedLayer) {
         //if hits on the right side, die
-        if(player.body.blocked.right) {
+        if(animal.body.blocked.right) {
 
-            console.log(player.body.blocked);
+            console.log(animal.body.blocked);
 
             //set to dead (this doesn't affect rendering)
-            this.player.alive = false;
+            animal.alive = false;
 
             //stop moving to the right
-            this.player.body.velocity.x = 0;
+            animal.body.velocity.x = 0;
 
             //change sprite image
-            this.player.loadTexture('playerDead');
+            animal.loadTexture('playerDead');
+
+            //check herd still living animals
+            var gameOver = true;
+            this.herd.forEach(function (animal) {
+                if (animal.alive) {
+                    gameOver = false;
+                }
+            });
 
             //go to gameover after a few miliseconds
-            this.game.time.events.add(1500, this.gameOver, this);
+            if (gameOver) {
+                this.game.time.events.add(1500, this.gameOver, this);
+            }
         }
     },
     gameOver: function() {
         this.game.state.start('Game');
     },
-    playerJump: function() {
-        if(this.player.body.blocked.down) {
-            this.player.body.velocity.y -= 700;
-        }
+    playersJump: function() {
+        this.herd.forEach(function (animal) {
+            if (animal.body.blocked.down) {
+                animal.body.velocity.y -= 700;
+            }
+        });
     },
-    playerDuck: function() {
-        //change image and update the body size for the physics engine
-        this.player.loadTexture('playerDuck');
-        this.player.body.setSize(this.player.duckedDimensions.width, this.player.duckedDimensions.height);
+    playersDuck: function() {
+        this.herd.forEach(function (animal) {
+           //change image and update the body size for the physics engine
+           animal.loadTexture('playerDuck');
+           animal.body.setSize(animal.duckedDimensions.width, animal.duckedDimensions.height);
 
-        //we use this to keep track whether it's ducked or not
-        this.player.isDucked = true;
+           //we use this to keep track whether it's ducked or not
+           animal.isDucked = true;
+        });
     },
     render: function()
     {
         this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-        this.game.debug.bodyInfo(this.player, 0, 80);
+        this.herd.forEach(function (animal) {
+            this .game.debug.bodyInfo(animal, 0, 80);
+        }, this);
     }
 };
