@@ -25,6 +25,19 @@
         var score = 0;
         var scoreText;
 
+        function createStars() {
+            for (var i = 0; i < 12; i++) {
+                //  Create a star inside of the 'stars' group
+                var star = stars.create(i * 70, getRandomInt(1, 500), 'star');
+
+                //  Let gravity do its thing
+                star.body.gravity.y = 6;
+
+                //  This just gives each star a slightly random bounce value
+                star.body.bounce.y = 0.7 + Math.random() * 0.2;
+            }
+        }
+
         function create() {
             game.physics.startSystem(Phaser.Physics.ARCADE);
             game.add.sprite(0, 0, 'sky');
@@ -70,17 +83,7 @@
             stars.enableBody = true;
 
             //  Here we'll create 12 of them evenly spaced apart
-            for (var i = 0; i < 12; i++)
-            {
-                //  Create a star inside of the 'stars' group
-                var star = stars.create(i * 70, getRandomInt(1, 500), 'star');
-
-                //  Let gravity do its thing
-                star.body.gravity.y = 6;
-
-                //  This just gives each star a slightly random bounce value
-                star.body.bounce.y = 0.7 + Math.random() * 0.2;
-            }
+            createStars();
         }
 
         function tooSlow(star, platforms) {
@@ -91,7 +94,7 @@
             // Collision check
             game.physics.arcade.collide(player, platforms);
             game.physics.arcade.collide(stars, platforms, tooSlow);
-            game.physics.arcade.overlap(player, stars, collectStar, null, this);
+            game.physics.arcade.overlap(stars, player, collectStar, null, this);
 //            game.physics.arcade.overlap(stars, platforms, tooSlow, null, this);
 
 
@@ -127,10 +130,23 @@
             {
                 player.body.velocity.y = -350;
             }
+
+            removeKilledStars();
+            if (stars.length < 5) {
+                createStars();
+            }
+        }
+
+        function removeKilledStars() {
+            stars.forEach(function (aStar) {
+                if (aStar.alive !== true) {
+                    console.log("Destroying a star")
+                    aStar.destroy();
+                }
+            });
         }
 
         function collectStar (player, star) {
-
             // Removes the star from the screen
             star.kill();
 
