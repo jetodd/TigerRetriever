@@ -3,7 +3,7 @@
 Install node from nodejs website
 
 ```
-npm install -g http-server
+sudo npm install -g http-server
 ```
 
 ```

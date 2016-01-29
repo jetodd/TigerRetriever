@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/josh-taylr/TigerRetriever#readme",
   "dependencies": {
-    "phaser": "^2.4.4",
+    "phaser": "^2.4.4"
   },
   "devDependencies": {
     "http-server": "^3.7.0"
