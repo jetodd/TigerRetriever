@@ -26,15 +26,6 @@ TigerRetriever.Game.prototype = {
         //  This stops it from falling away when you jump on it
         this.ground.body.immovable = true;
 
-        this.ledge = this.platforms.create(400, 400, 'ground');
-
-        this.ledge.body.immovable = true;
-
-        this.ledge = this.platforms.create(-150, 250, 'ground');
-
-        this.ledge.body.immovable = true;
-
-
         this.player = this.game.add.sprite(32, this.game.world.height - 150, 'dude');
 
         //  We need to enable physics on the player
@@ -49,47 +40,9 @@ TigerRetriever.Game.prototype = {
         this.player.animations.add('left', [0, 1, 2, 3], 10, true);
         this.player.animations.add('right', [5, 6, 7, 8], 10, true);
 
-        this.stars = this.game.add.group();
-
-        this.stars.enableBody = true;
-
-        //  Here we'll create 12 of them evenly spaced apart
-        this.createStars();
-
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
 
-    },
-    createStars: function () {
-        for (var i = 0; i < 12; i++) {
-            //  Create a star inside of the 'stars' group
-            var star = this.stars.create(i * 70, this.getRandomInt(1, 500), 'star');
-
-            //  Let gravity do its thing
-            star.body.gravity.y = 6;
-
-            //  This just gives each star a slightly random bounce value
-            star.body.bounce.y = 0.7 + Math.random() * 0.2;
-        }
-    },
-    tooSlow: function (star, platforms) {
-        star.kill();
-    },
-    collectStar: function (player, star) {
-        // Removes the star from the screen
-        star.kill();
-
-        //  Add and update the score
-        this.score += 10;
-        this.scoreText.text = 'Score: ' + this.score;
-
-    },
-    removeKilledStars: function () {
-        this.stars.forEach(function (aStar) {
-            if (aStar.alive !== true) {
-                aStar.destroy();
-            }
-        });
     },
     getRandomInt: function (min, max) {
         return Math.floor(Math.random() * (max - min)) + min;
@@ -98,8 +51,6 @@ TigerRetriever.Game.prototype = {
         //only respond to keys and keep the speed if the player is alive
 
         this.game.physics.arcade.collide(this.player, this.platforms);
-        this.game.physics.arcade.collide(this.stars, this.platforms, this.tooSlow);
-        this.game.physics.arcade.overlap(this.stars, this.player, this.collectStar, null, this);
 
 
         //  Reset the players velocity (movement)
@@ -129,10 +80,6 @@ TigerRetriever.Game.prototype = {
             this.player.body.velocity.y = -350;
         }
 
-        this.removeKilledStars();
-        if (this.stars.length < 5) {
-            this.createStars();
-        }
     },
     render: function () {
         this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");

@@ -10,7 +10,7 @@ TigerRetriever.Boot.prototype = {
     },
     create: function() {
         //loading screen will have a white background
-        this.game.stage.backgroundColor = '#ae6f';
+        this.game.stage.backgroundColor = '#0066ff';
 
         //scaling options
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
