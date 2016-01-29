@@ -73,7 +73,7 @@
             for (var i = 0; i < 12; i++)
             {
                 //  Create a star inside of the 'stars' group
-                var star = stars.create(i * 70, 0, 'star');
+                var star = stars.create(i * 70, getRandomInt(1, 500), 'star');
 
                 //  Let gravity do its thing
                 star.body.gravity.y = 6;
@@ -83,11 +83,16 @@
             }
         }
 
+        function tooSlow(star, platforms) {
+            star.kill();
+        }
+
         function update() {
             // Collision check
             game.physics.arcade.collide(player, platforms);
-            game.physics.arcade.collide(stars, platforms);
+            game.physics.arcade.collide(stars, platforms, tooSlow);
             game.physics.arcade.overlap(player, stars, collectStar, null, this);
+//            game.physics.arcade.overlap(stars, platforms, tooSlow, null, this);
 
 
             var cursors = game.input.keyboard.createCursorKeys();
@@ -98,14 +103,14 @@
             if (cursors.left.isDown)
             {
                 //  Move to the left
-                player.body.velocity.x = -150;
+                player.body.velocity.x = -400;
 
                 player.animations.play('left');
             }
             else if (cursors.right.isDown)
             {
                 //  Move to the right
-                player.body.velocity.x = 150;
+                player.body.velocity.x = 400;
 
                 player.animations.play('right');
             }
@@ -133,6 +138,10 @@
             score += 10;
             scoreText.text = 'Score: ' + score;
 
+        }
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
         }
 
     };
