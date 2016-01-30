@@ -17,8 +17,8 @@ TigerRetriever.Preload.prototype = {
         var levelJson = JSON.stringify(generator.recreateInitialJson());
 
         this.load.tilemap('level1', null, levelJson, Phaser.Tilemap.TILED_JSON);
-        this.load.image('gameTiles', 'assets/images/background_spritesheet.png');
         this.load.spritesheet('player', 'assets/images/zebraaaaa.png',70,50,7,0,2);
+        this.load.spritesheet('gameTiles', 'assets/images/background_spritesheet.png', 45, 45);
         this.load.image('playerDuck', 'assets/images/player_duck.png');
         this.load.image('playerDead', 'assets/images/player_dead.png');
         this.load.image('goldCoin', 'assets/images/goldCoin.png');

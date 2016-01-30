@@ -147,9 +147,9 @@ TigerRetriever.Game.prototype = {
     render: function()
     {
         this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
-        this.herd.forEach(function (animal) {
-            this .game.debug.bodyInfo(animal, 0, 80);
-        }, this);
+        //this.herd.forEach(function (animal) {
+        //    this .game.debug.bodyInfo(animal, 0, 80);
+        //}, this);
     },
     newHerd: function(size)
     {

@@ -21,7 +21,7 @@ TigerRetriever.JsonGenerator.prototype = {
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
 
-        tilesets.push(this.makeTileset(1, "..\/images\/tiles_spritesheet.png", 934, 790, 0, "tiles_spritesheet", 2,
+        tilesets.push(this.makeTileset(0, "..\/images\/background_spritesheet.png", 934, 790, 0, "tiles_spritesheet", 2,
             tileWidth, tileHeight));
 
         return this.generate(mapHeight, mapWidth, tileWidth, tileHeight, tilesets, layers);
