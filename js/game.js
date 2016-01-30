@@ -1,6 +1,8 @@
 var TigerRetriever = TigerRetriever || {};
 
-TigerRetriever.Game = function(){};
+TigerRetriever.Game = function(){
+    this.INIT_HERD_SIZE = 3;
+};
 
 TigerRetriever.Game.prototype = {
     preload: function() {
@@ -23,29 +25,11 @@ TigerRetriever.Game.prototype = {
         //resizes the game world to match the layer dimensions
         this.backgroundlayer.resizeWorld();
 
-        //create herd
-        this.herd = [];
-        for (i = 0; i < 3; i++)
-        {
-            var animal = this.game.add.sprite(100 + i * 50, 300, 'player');
-
-            //enable physics on the player
-            this.game.physics.arcade.enable(animal);
-
-            //player gravity
-            animal.body.gravity.y = 1000;
-
-            //properties when the player is ducked and standing, so we can use in update()
-            var playerDuckImg = this.game.cache.getImage('playerDuck');
-            animal.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
-            animal.standDimensions = {width: animal.width, height: animal.height};
-            animal.anchor.setTo(0.5, 1);
-
-            this.herd.push(animal);
-        }
+        //create the herd
+        this.herd = new TigerRetriever.Game.Herd(this.INIT_HERD_SIZE, this.game);
 
         //the camera will follow the player in the world
-        this.game.camera.follow(this.herd[0]);
+        this.game.camera.follow(this.herd.cameraFocus());
 
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -122,9 +106,6 @@ TigerRetriever.Game.prototype = {
     animalHit: function(animal, blockedLayer) {
         //if hits on the right side, die
         if(animal.body.blocked.right) {
-
-            console.log(animal.body.blocked);
-
             //set to dead (this doesn't affect rendering)
             animal.alive = false;
 
@@ -175,4 +156,41 @@ TigerRetriever.Game.prototype = {
             this .game.debug.bodyInfo(animal, 0, 80);
         }, this);
     }
+};
+
+TigerRetriever.Game.Herd = function (size, game) {
+    this.game = game;
+
+    for (i = 0; i < size; i++) {
+        //make new member of the herd
+        var member = this.game.add.sprite(100 + i * 50, 100, 'player');
+
+        //enable physics on the member
+        this.game.physics.arcade.enable(member);
+
+        //player gravity
+        member.body.gravity.y = 1000;
+
+        //properties when the member is ducked and standing, so we can use in update()
+        var playerDuckImg = this.game.cache.getImage('playerDuck');
+        member.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
+        member.standDimensions = {width: member.width, height: member.height};
+        member.anchor.setTo(0.5, 1);
+
+        this.push(member);
+    }
+};
+
+//use an array as the base of the new object
+TigerRetriever.Game.Herd.prototype = Array.prototype;
+
+//focus is on the leading member
+TigerRetriever.Game.Herd.prototype.cameraFocus = function() {
+    var lead = this[0];
+    for (i = 1; i < this.length; i++) {
+        if (this[i].x > lead.x) {
+            lead = this[i];
+        }
+    }
+    return lead;
 };
