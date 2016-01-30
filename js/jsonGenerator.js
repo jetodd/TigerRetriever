@@ -19,6 +19,7 @@ TigerRetriever.JsonGenerator.prototype = {
 
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
+        layers.push(this.makeLayer(null, mapHeight, "objectsLayer",1,"objectgroup",true,mapWidth,0,0,objectsLayer));
 
         tilesets.push(this.makeTileset(0, "..\/images\/ground.png", 1000, 45, 0, "tiles_spritesheet", 2,
             tileWidth, tileHeight));
@@ -120,7 +121,9 @@ TigerRetriever.JsonGenerator.prototype = {
         }
 
         if (objects) {
-            layer.objects = (objects);
+            layer.objects = objects;
+        } else {
+            console.log("No objects");
         }
 
         return layer;
@@ -138,6 +141,39 @@ TigerRetriever.JsonGenerator.prototype = {
             "version": 1,
             "width": width
         }
-
+    },
+   getObjectLayer: function() {
+        return 
+                [{
+                 "gid":1,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+                     "sprite":"candyyyyy",
+                     "type":"candy"
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":226,
+                 "y":119
+                }]
     }
 };
+
+var objectsLayer = [{
+                 "gid":1,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+                     "sprite":"candyyyyy",
+                     "type":"candy"
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":226,
+                 "y":119
+                }];

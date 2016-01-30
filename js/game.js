@@ -24,6 +24,8 @@ TigerRetriever.Game.prototype = {
         //resizes the game world to match the layer dimensions
         this.backgroundlayer.resizeWorld();
 
+        this.createCandy();
+
         //create array of herd members
         this.herd = this.newHerd(this.INIT_HERD_SIZE);
 
@@ -39,6 +41,10 @@ TigerRetriever.Game.prototype = {
     //find objects in a Tiled layer that containt a property called "type" equal to a certain value
     findObjectsByType: function(type, map, layerName) {
         var result = new Array();
+        console.log(map);
+        console.log(layerName);
+
+        console.log(map.objects);
         map.objects[layerName].forEach(function(element){
             if(element.properties.type === type) {
                 //Phaser uses top left, Tiled bottom left so we have to adjust
@@ -62,6 +68,7 @@ TigerRetriever.Game.prototype = {
     update: function() {
         //collisions
         this.updateHerd();
+        //this.game.physics.arcade.overlap(this.player, this.candies, this.collect, null, this);
 
         var alive = false;
         this.herd.forEach(function (animal) {
@@ -195,6 +202,14 @@ TigerRetriever.Game.prototype = {
             members.push(member);
         }
         return members;
+    },
+    createCandy: function() {
+        this.candies = this.game.add.group();
+        this.candies.enableBody = true;
+        var result = this.findObjectsByType('candy', this.map, 'objectsLayer');
+        result.forEach(function(element){
+            this.createFromTiledObject(element, this.candies);
+        }, this);
     },
     updateHerd: function() {
         this.herd.forEach(function(member) {
