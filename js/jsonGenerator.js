@@ -1,23 +1,29 @@
-var layer1Data = [139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139, 139];
-var layer2Data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 96, 96, 96, 96, 96, 96, 96, 96, 96, 0, 0, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 0, 0, 0, 96, 96, 96, 96, 96, 96, 96, 0, 0, 0, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96];
-
+    var mapWidth = 300
+    var mapHeight = 6
+    var minLand = 4
+    var maxGap = 3
+    var tileWidth = 40
+    var tileHeight = 40
 
 var TigerRetriever = TigerRetriever || {};
 TigerRetriever.JsonGenerator = function(){};
 
 TigerRetriever.JsonGenerator.prototype = {
+
+
     recreateInitialJson: function() {
         var layers = [];
         var tilesets = [];
+        var background = new Array(mapWidth * mapHeight);
+        background.fill(139);
 
-        layers.push(this.makeLayer(layer1Data, 6, "backgroundLayer", 1, "tilelayer", true, 50, 0, 0));
-        layers.push(this.makeLayer(layer2Data, 6, "blockedLayer", 1, "tilelayer", true, 50, 0, 0));
-        layers.push(this.makeLayer(layer2Data, 6, "blockedLayer", 1, "tilelayer", true, 50, 0, 0));
-        layers.push(this.makeLayer(null, 6, "objectsLayer", 1, "objectgroup", true, 50, 0, 0, layer3Objects));
+        layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
+        layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
+        //layers.push(this.makeLayer(null, mapHeight, "objectsLayer", 1, "objectgroup", true, mapWidth, 0, 0, layer3Objects));
 
         tilesets.push(this.makeTileset(1, "..\/images\/tiles_spritesheet.png", 934, 790, 0, "tiles_spritesheet", 2, 50, 50));
 
-        return this.generate(6, 50, 70, 70, tilesets, layers);
+        return this.generate(mapHeight, mapWidth, tileWidth, tileHeight, tilesets, layers);
     },
     makeTileset: function(firstgid, imageLocation, imageHeight, imageWidth, margin, name, spacing, tileHeight, tileWidth) {
         return {
@@ -32,7 +38,40 @@ TigerRetriever.JsonGenerator.prototype = {
             "tileheight": tileHeight,
             "tilewidth": tileWidth
         };
+    },
+    makeMapBase: function() {
+        var utils = new TigerRetriever.utils;
+        var gapCount = 0;
+        var landCount = 5;
+        var mapBase = new Array(mapWidth * mapHeight);
+        mapBase.fill(0);
 
+        var startIndex = (mapHeight - 1) * mapWidth;
+        var maxIndex = mapWidth * mapHeight;
+
+        mapBase.fill(1, startIndex, startIndex + 15);
+        mapBase.fill(1, maxIndex - 15, maxIndex);
+
+        // Generate array for map
+        // 1 = land, 0 = gap
+        for (i = startIndex + 15; i < maxIndex - 15; i++) {
+            if (landCount < minLand && landCount > 0) {
+                mapBase[i] = 1;
+                landCount++;
+                gapCount = 0;
+            } else {
+                if (utils.getRandomInt(0, 1) == 1) {
+                    gapCount++;
+                    mapBase[i] = 0;
+                    landCount = 0;
+                } else {
+                    mapBase[i] = 1;
+                    landCount++;
+                    gapCount = 0;
+                }
+            }
+        }
+        return mapBase;
     },
     makeLayer: function(data, height, name, opacity, type, visible, width, x, y, objects) {
         layer = {
@@ -72,245 +111,3 @@ TigerRetriever.JsonGenerator.prototype = {
 
     }
 };
-
-var layer3Objects = [
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":526,
-        "y":219
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":647,
-        "y":140
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":792,
-        "y":174
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":910,
-        "y":243
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":1435,
-        "y":198
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":1514,
-        "y":137
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":1710,
-        "y":243
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":1644,
-        "y":162
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":1362,
-        "y":286
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":2489,
-        "y":228
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":2610,
-        "y":137
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":2789,
-        "y":131
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":2947,
-        "y":228
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":3107,
-        "y":280
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":2032,
-        "y":328
-    },
-    {
-        "gid":143,
-        "height":0,
-        "name":"",
-        "properties":
-        {
-            "sprite":"goldCoin",
-            "type":"coin"
-        },
-        "type":"",
-        "visible":true,
-        "width":0,
-        "x":344,
-        "y":283
-    }];

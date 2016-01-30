@@ -1,6 +1,6 @@
 var TigerRetriever = TigerRetriever || {};
 
-TigerRetriever.game = new Phaser.Game(746, 420, Phaser.AUTO, '');
+TigerRetriever.game = new Phaser.Game(750, 240, Phaser.AUTO, '');
 
 TigerRetriever.game.state.add('Boot', TigerRetriever.Boot);
 TigerRetriever.game.state.add('Preload', TigerRetriever.Preload);
