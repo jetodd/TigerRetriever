@@ -82,7 +82,7 @@ TigerRetriever.Game.prototype = {
                 var median = math.median(this.herd.map(function (m) { return m.body.x; }));
                 
                 animal.body.velocity.x = 300;
-            });
+            }, this);
 
             if (this.cursors.up.isDown && !this.upKeyDownLastUpdate) {
                 var leader = this.herdLeader();
