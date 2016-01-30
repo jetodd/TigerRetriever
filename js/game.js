@@ -27,6 +27,7 @@ TigerRetriever.Game.prototype = {
         this.scoreText = this.game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
         this.createCandy();
+        this.createClouds();
 
         //create array of herd members
         this.herd = this.newHerd(this.INIT_HERD_SIZE);
@@ -181,6 +182,14 @@ TigerRetriever.Game.prototype = {
         var result = this.findObjectsByType('candy', this.map, 'objectsLayer');
         result.forEach(function(element){
             this.createFromTiledObject(element, this.candies);
+        }, this);
+    },
+    createClouds: function() {
+        this.clouds = this.game.add.group();
+        this.clouds.enableBody = true;
+        var result = this.findObjectsByType('cloud', this.map, 'cloudsLayer');
+        result.forEach(function(element){
+            this.createFromTiledObject(element, this.clouds);
         }, this);
     },
     updateHerd: function() {

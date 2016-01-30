@@ -20,6 +20,7 @@ TigerRetriever.JsonGenerator.prototype = {
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(null, mapHeight, "objectsLayer", 1, "objectgroup", true, mapWidth, 0, 0, objectsLayer));
+        layers.push(this.makeLayer(null, mapHeight, "cloudsLayer", 1, "objectgroup", true, mapWidth, 0, 0, cloudsLayer))
 
         tilesets.push(this.makeTileset(0, "..\/images\/ground.png", 1000, 45, 0, "tiles_spritesheet", 2,
             tileWidth, tileHeight));
@@ -171,4 +172,19 @@ var objectsLayer = [{
     "width": 0,
     "x": 512,
     "y": 145
+}];
+
+var cloudsLayer = [{
+    "gid": 1,
+    "height": 0,
+    "name": "",
+    "properties": {
+        "sprite": "clouddddd",
+        "type": "cloud"
+    },
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 300,
+    "y": 100
 }];
