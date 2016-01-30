@@ -3,7 +3,6 @@ var TigerRetriever = TigerRetriever || {};
 TigerRetriever.Game = function(){
     this.INIT_HERD_SIZE = 3;
 };
-
 TigerRetriever.Game.prototype = {
     preload: function() {
         this.game.time.advancedTiming = true;
@@ -63,7 +62,7 @@ TigerRetriever.Game.prototype = {
     update: function() {
         //collisions
         this.updateHerd();
-        
+
         var alive = false;
         this.herd.forEach(function (animal) {
             if (animal.alive) {
@@ -78,7 +77,6 @@ TigerRetriever.Game.prototype = {
             if (this.cursors.up.isDown && !this.upKeyDownLastUpdate) {
                 var leader = this.herdLeader();
                 if (leader.body.blocked.down) {
-                    console.log("Adding jump point");
                     this.herd.forEach(function (member) {
                         member.jumpPoints.push(leader.body.x);
                     });
@@ -145,12 +143,12 @@ TigerRetriever.Game.prototype = {
     },
     playersDuck: function() {
         this.herd.forEach(function (animal) {
-           //change image and update the body size for the physics engine
-           animal.loadTexture('playerDuck');
-           animal.body.setSize(animal.duckedDimensions.width, animal.duckedDimensions.height);
+            //change image and update the body size for the physics engine
+            animal.loadTexture('playerDuck');
+            animal.body.setSize(animal.duckedDimensions.width, animal.duckedDimensions.height);
 
-           //we use this to keep track whether it's ducked or not
-           animal.isDucked = true;
+            //we use this to keep track whether it's ducked or not
+            animal.isDucked = true;
         });
     },
     render: function()
@@ -160,12 +158,21 @@ TigerRetriever.Game.prototype = {
         //    this .game.debug.bodyInfo(animal, 0, 80);
         //}, this);
     },
-    newHerd: function(size)
-    {
+    pickZebraSprite: function() {
+        var utils = new TigerRetriever.utils;
+
+        var spriteKey = utils.getRandomInt(0, 2) * 7;
+
+        console.log("SpriteKey is: " + spriteKey);
+
+        return spriteKey;
+    },
+    newHerd: function(size) {
+
         var members = [];
-        for (i = 0; i < size; i++) {
+        for (var i = 0; i < size; i++) {
             //make new member of the herd
-            var member = this.game.add.sprite(100 + i * 70, 100, 'player');
+            var member = this.game.add.sprite(100 + i * 70, 100, 'zebra', this.pickZebraSprite()    );
             member.animations.add('right', [0,1,2,3,4,5,6], 10, true);
 
             //enable physics on the member
