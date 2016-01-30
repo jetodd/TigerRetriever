@@ -113,7 +113,7 @@ TigerRetriever.Game.prototype = {
             animal.body.velocity.x = 0;
 
             //change sprite image
-            animal.loadTexture('playerDead');
+            //animal.loadTexture('playerDead');
 
             //check herd still living animals
             var gameOver = true;
