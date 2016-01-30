@@ -18,7 +18,7 @@ TigerRetriever.Preload.prototype = {
 
         this.load.tilemap('level1', null, levelJson, Phaser.Tilemap.TILED_JSON);
         this.load.image('gameTiles', 'assets/images/background_spritesheet.png');
-        this.load.image('player', 'assets/images/player.png');
+        this.load.image('player', 'assets/images/zebraaaaa.png');
         this.load.image('playerDuck', 'assets/images/player_duck.png');
         this.load.image('playerDead', 'assets/images/player_dead.png');
         this.load.image('goldCoin', 'assets/images/goldCoin.png');
