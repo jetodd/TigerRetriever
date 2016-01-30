@@ -1,17 +1,18 @@
-    var mapWidth = 300
-    var mapHeight = 6
-    var minLand = 4
-    var maxGap = 3
-    var tileWidth = 40
-    var tileHeight = 40
-
 var TigerRetriever = TigerRetriever || {};
-TigerRetriever.JsonGenerator = function(){};
+
+TigerRetriever.JsonGenerator = function () {
+};
+var mapHeight = 6;
+var minLand = 4;
+var maxGap = 3;
+var tileWidth = 45;
+var tileHeight = 45;
+var mapWidth = 300;
 
 TigerRetriever.JsonGenerator.prototype = {
 
 
-    recreateInitialJson: function() {
+    recreateInitialJson: function () {
         var layers = [];
         var tilesets = [];
         var background = new Array(mapWidth * mapHeight);
@@ -19,13 +20,13 @@ TigerRetriever.JsonGenerator.prototype = {
 
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
-        //layers.push(this.makeLayer(null, mapHeight, "objectsLayer", 1, "objectgroup", true, mapWidth, 0, 0, layer3Objects));
 
-        tilesets.push(this.makeTileset(1, "..\/images\/tiles_spritesheet.png", 934, 790, 0, "tiles_spritesheet", 2, 50, 50));
+        tilesets.push(this.makeTileset(1, "..\/images\/tiles_spritesheet.png", 934, 790, 0, "tiles_spritesheet", 2,
+            tileWidth, tileHeight));
 
         return this.generate(mapHeight, mapWidth, tileWidth, tileHeight, tilesets, layers);
     },
-    makeTileset: function(firstgid, imageLocation, imageHeight, imageWidth, margin, name, spacing, tileHeight, tileWidth) {
+    makeTileset: function (firstgid, imageLocation, imageHeight, imageWidth, margin, name, spacing, tileHeight, tileWidth) {
         return {
             "firstgid": firstgid,
             "image": imageLocation,
@@ -39,7 +40,7 @@ TigerRetriever.JsonGenerator.prototype = {
             "tilewidth": tileWidth
         };
     },
-    makeMapBase: function() {
+    makeMapBase: function () {
         var utils = new TigerRetriever.utils;
         var gapCount = 0;
         var landCount = 5;
@@ -73,7 +74,7 @@ TigerRetriever.JsonGenerator.prototype = {
         }
         return mapBase;
     },
-    makeLayer: function(data, height, name, opacity, type, visible, width, x, y, objects) {
+    makeLayer: function (data, height, name, opacity, type, visible, width, x, y, objects) {
         layer = {
             "height": height,
             "name": name,
@@ -96,7 +97,7 @@ TigerRetriever.JsonGenerator.prototype = {
         return layer;
 
     },
-    generate: function(height, width, tilewidth, tileheight, tilesets, layers) {
+    generate: function (height, width, tilewidth, tileheight, tilesets, layers) {
         return json = {
             "height": height,
             "layers": layers,
