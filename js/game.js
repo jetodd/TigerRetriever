@@ -41,10 +41,6 @@ TigerRetriever.Game.prototype = {
     //find objects in a Tiled layer that containt a property called "type" equal to a certain value
     findObjectsByType: function(type, map, layerName) {
         var result = new Array();
-        console.log(map);
-        console.log(layerName);
-
-        console.log(map.objects);
         map.objects[layerName].forEach(function(element){
             if(element.properties.type === type) {
                 //Phaser uses top left, Tiled bottom left so we have to adjust

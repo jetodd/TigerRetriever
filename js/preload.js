@@ -15,7 +15,6 @@ TigerRetriever.Preload.prototype = {
         //load game assets
         var generator = new TigerRetriever.JsonGenerator;
         var levelJson = JSON.stringify(generator.recreateInitialJson());
-        console.log(levelJson);
 
         this.load.tilemap('level1', null, levelJson, Phaser.Tilemap.TILED_JSON);
 

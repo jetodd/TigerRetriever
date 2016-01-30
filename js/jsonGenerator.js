@@ -122,8 +122,6 @@ TigerRetriever.JsonGenerator.prototype = {
 
         if (objects) {
             layer.objects = objects;
-        } else {
-            console.log("No objects");
         }
 
         return layer;
