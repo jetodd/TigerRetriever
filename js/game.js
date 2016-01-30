@@ -161,19 +161,22 @@ TigerRetriever.Game.prototype = {
     pickZebraSprite: function() {
         var utils = new TigerRetriever.utils;
 
-        var spriteKey = utils.getRandomInt(0, 2) * 7;
+        var spriteKey = utils.getRandomInt(0, 2)    ;
 
-        console.log("SpriteKey is: " + spriteKey);
+        var animationFrames = [];
+        for (var j = spriteKey; j < spriteKey + 21; j+=3) {
+            animationFrames.push(j)
+        }
 
-        return spriteKey;
+        return { "spriteKey": spriteKey, "animationFrames":  animationFrames};
     },
     newHerd: function(size) {
-
         var members = [];
         for (var i = 0; i < size; i++) {
             //make new member of the herd
-            var member = this.game.add.sprite(100 + i * 70, 100, 'zebra', this.pickZebraSprite()    );
-            member.animations.add('right', [0,1,2,3,4,5,6], 10, true);
+            var sprite = this.pickZebraSprite();
+            var member = this.game.add.sprite(100 + i * 70, 100, 'zebra', sprite.spriteKey);
+            member.animations.add('right', sprite.animationFrames, 10, true);
 
             //enable physics on the member
             this.game.physics.arcade.enable(member);
