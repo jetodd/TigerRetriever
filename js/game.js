@@ -108,7 +108,7 @@ TigerRetriever.Game.prototype = {
             animal.body.velocity.x = 0;
 
             //change sprite image
-            animal.loadTexture('playerDead');
+            //animal.loadTexture('playerDead');
 
             //check herd still living animals
             var gameOver = true;
@@ -183,7 +183,6 @@ TigerRetriever.Game.prototype = {
             member.animations.play('right');
             //member has pending jumps
             if (member.jumpPoints.length) {
-                console.log(member.jumpPoints);
                 var nextX = member.jumpPoints[0];
                 if (member.body.x > nextX) {
                     member.body.velocity.y -= 500;
