@@ -20,9 +20,6 @@ TigerRetriever.Preload.prototype = {
         this.load.spritesheet('player', 'assets/images/zebraaaaa.png',70,50,7,0,2);
         this.load.spritesheet('gameTiles', 'assets/images/background_spritesheet.png', 45, 45,2, 0, 2);
         this.load.image('playerDuck', 'assets/images/player_duck.png');
-        this.load.image('playerDead', 'assets/images/player_dead.png');
-        this.load.image('goldCoin', 'assets/images/goldCoin.png');
-        this.load.audio('coin', ['assets/audio/coin.ogg', 'assets/audio/coin.mp3']);
 
     },
     create: function() {
