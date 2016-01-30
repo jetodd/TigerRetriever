@@ -68,7 +68,7 @@ TigerRetriever.Game.prototype = {
     update: function() {
         //collisions
         this.updateHerd();
-        //this.game.physics.arcade.overlap(this.player, this.candies, this.collect, null, this);
+        this.game.physics.arcade.overlap(this.player, this.candies, this.collect, null, this);
 
         var alive = false;
         this.herd.forEach(function (animal) {
