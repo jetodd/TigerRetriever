@@ -11,8 +11,6 @@ var tileHeight = 45;
 var mapWidth = 300;
 
 TigerRetriever.JsonGenerator.prototype = {
-
-
     recreateInitialJson: function () {
         var layers = [];
         var tilesets = [];
