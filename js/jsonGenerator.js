@@ -43,7 +43,17 @@ TigerRetriever.JsonGenerator.prototype = {
     makeCandies: function () {
         var candies = [];
 
-        candies.push(this.makeCandyObject(300, 150));
+
+        var candyX = 400;
+        // Between 150 and 200
+        var candyY = 150;
+
+        for (var i = 0; i < 50; i++) {
+
+            candies.push(this.makeCandyObject(candyX, candyY));
+            candyX += 200;
+        }
+
         candies.push(this.makeCandyObject(600, 150));
         candies.push(this.makeCandyObject(800, 150));
 
