@@ -33,6 +33,8 @@ TigerRetriever.Game.prototype = {
 
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
+
+        this.upKeyDownLastUpdate = false;
     },
 
     //find objects in a Tiled layer that containt a property called "type" equal to a certain value
@@ -61,9 +63,7 @@ TigerRetriever.Game.prototype = {
     update: function() {
         //collisions
         this.updateHerd();
-
-        //only respond to keys and keep the speed if the player is alive
-        //check herd still living animals
+        
         var alive = false;
         this.herd.forEach(function (animal) {
             if (animal.alive) {
@@ -75,11 +75,17 @@ TigerRetriever.Game.prototype = {
                 animal.body.velocity.x = 300;
             });
 
-            if(this.cursors.up.isDown) {
-                this.jumpHerd(this.herdLeader().body.x);
-            }
-            else if(this.cursors.down.isDown) {
-                this.playersDuck();
+            if (this.cursors.up.isDown && !this.upKeyDownLastUpdate) {
+                var leader = this.herdLeader();
+                if (leader.body.blocked.down) {
+                    console.log("Adding jump point");
+                    this.herd.forEach(function (member) {
+                        member.jumpPoints.push(leader.body.x);
+                    });
+                }
+                this.upKeyDownLastUpdate = true;
+            } else {
+                this.upKeyDownLastUpdate = false;
             }
 
             if(!this.cursors.down.isDown && this.herd[0].isDucked && !this.pressingDown) {
@@ -96,7 +102,6 @@ TigerRetriever.Game.prototype = {
                 this.game.state.start('Game');
             }
         }
-
     },
     animalHit: function(animal, blockedLayer) {
         //if hits on the right side, die
@@ -127,12 +132,16 @@ TigerRetriever.Game.prototype = {
     gameOver: function() {
         this.game.state.start('Game');
     },
-    jumpHerd: function(x) {
-        this.herd.forEach(function (member) {
-            if (member.body.blocked.down) {
-                member.jumpPoints.push(x);
-            }
-        });
+    jumpHerd: function() {
+        var leader = this.herdLeader();
+
+        //lead can only jump when grounded
+        if (leader.body.blocked.down) {
+            var jumpPoint = leader.body.position;
+            this.herd.forEach(function (member) {
+                member.jumpPoints.push(jumpPoint);
+            });
+        }
     },
     playersDuck: function() {
         this.herd.forEach(function (animal) {
@@ -180,13 +189,13 @@ TigerRetriever.Game.prototype = {
     updateHerd: function() {
         this.herd.forEach(function(member) {
             this.game.physics.arcade.collide(member, this.blockedLayer, this.animalHit, null, this);
+
             member.animations.play('right');
-            //member has pending jumps
+
             if (member.jumpPoints.length) {
-                console.log(member.jumpPoints);
-                var nextX = member.jumpPoints[0];
-                if (member.body.x > nextX) {
-                    member.body.velocity.y -= 500;
+                var x = member.jumpPoints[0];
+                if (member.body.x > x) {
+                    member.body.velocity.y -= 400;
                     member.jumpPoints.shift();
                 }
             }
