@@ -4,6 +4,7 @@ TigerRetriever.JsonGenerator = function () {
 };
 var mapHeight = 6;
 var minLand = 4;
+var minGap = 2;
 var maxGap = 3;
 var tileWidth = 45;
 var tileHeight = 45;
@@ -65,10 +66,17 @@ TigerRetriever.JsonGenerator.prototype = {
         // Generate array for map
         // 1 = land, 0 = gap
         for (i = startIndex + 15; i < maxIndex - 15; i++) {
+            // Enforce minimum amount of land
             if (landCount < minLand && landCount > 0) {
                 mapBase[i] = landIndex;
                 landIndex++;
                 gapCount = 0;
+                landCount ++;
+                // Enforce minimum amount of gaps as we can't fall down 1 tile wide gap
+            } else if (gapCount < minGap && gapCount > 0) {
+                gapCount++;
+                mapBase[i] = 0;
+                landCount = 0;
             } else {
                 if (utils.getRandomInt(0, 1) == 1) {
                     gapCount++;
@@ -77,6 +85,7 @@ TigerRetriever.JsonGenerator.prototype = {
                 } else {
                     mapBase[i] = landIndex;
                     landIndex++;
+                    landCount++;
                     gapCount = 0;
                 }
             }
@@ -86,17 +95,13 @@ TigerRetriever.JsonGenerator.prototype = {
             }
         }
 
-        var startLandTiles = 1;
-
-        
-
-        // for (i = 15; i > 0; i--) {
-        //     mapBase[maxIndex - i] = landIndex;
-        //     landIndex++;
-        //     if (landIndex == 4) {
-        //         landIndex = 1;
-        //     }
-        // }
+         for (i = 15; i > 0; i--) {
+             mapBase[maxIndex - i] = landIndex;
+             landIndex++;
+             if (landIndex == 4) {
+                 landIndex = 1;
+             }
+         }
 
         return mapBase;
     },
