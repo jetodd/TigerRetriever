@@ -1,0 +1,10 @@
+{
+  "name": "tigerretriever",
+  "version": "0.0.1",
+  "authors": [
+    ""
+  ],
+  "dependencies": {
+    "phaser-official": "latest"
+  }
+}

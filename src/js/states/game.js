@@ -1,10 +1,11 @@
-var TigerRetriever = TigerRetriever || {};
 
-TigerRetriever.Game = function(){
+var Game = function(){
     this.INIT_HERD_SIZE = 3;
 };
 
-TigerRetriever.Game.prototype = {
+module.exports = Game;
+
+Game.prototype = {
     preload: function() {
         this.game.time.advancedTiming = true;
     },
@@ -26,7 +27,7 @@ TigerRetriever.Game.prototype = {
         this.backgroundlayer.resizeWorld();
 
         //create the herd
-        this.herd = new TigerRetriever.Game.Herd(this.INIT_HERD_SIZE, this.game);
+        this.herd = new Game.Herd(this.INIT_HERD_SIZE, this.game);
 
         //the camera will follow the player in the world
         this.game.camera.follow(this.herd.cameraFocus());
@@ -40,7 +41,7 @@ TigerRetriever.Game.prototype = {
 
     //find objects in a Tiled layer that containt a property called "type" equal to a certain value
     findObjectsByType: function(type, map, layerName) {
-        var result = new Array();
+        var result = [];
         map.objects[layerName].forEach(function(element){
             if(element.properties.type === type) {
                 //Phaser uses top left, Tiled bottom left so we have to adjust
@@ -158,7 +159,7 @@ TigerRetriever.Game.prototype = {
     }
 };
 
-TigerRetriever.Game.Herd = function (size, game) {
+Game.Herd = function (size, game) {
     this.game = game;
 
     for (i = 0; i < size; i++) {
@@ -182,10 +183,10 @@ TigerRetriever.Game.Herd = function (size, game) {
 };
 
 //use an array as the base of the new object
-TigerRetriever.Game.Herd.prototype = Array.prototype;
+Game.Herd.prototype = Array.prototype;
 
 //focus is on the leading member
-TigerRetriever.Game.Herd.prototype.cameraFocus = function() {
+Game.Herd.prototype.cameraFocus = function() {
     var lead = this[0];
     for (i = 1; i < this.length; i++) {
         if (this[i].x > lead.x) {

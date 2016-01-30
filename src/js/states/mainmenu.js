@@ -1,8 +1,7 @@
-var TigerRetriever = TigerRetriever || {};
+var MainMenu = function(){};
+module.exports = MainMenu;
 
-TigerRetriever.MainMenu = function(){};
-
-TigerRetriever.MainMenu.prototype = {
+MainMenu.prototype = {
     preload: function() {
         //show loading screen
     },

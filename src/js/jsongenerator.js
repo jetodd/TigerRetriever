@@ -1,7 +1,6 @@
-var TigerRetriever = TigerRetriever || {};
+var JsonGenerator = function () {};
+module.exports = JsonGenerator;
 
-TigerRetriever.JsonGenerator = function () {
-};
 var mapHeight = 6;
 var minLand = 4;
 var maxGap = 3;
@@ -9,7 +8,7 @@ var tileWidth = 45;
 var tileHeight = 45;
 var mapWidth = 300;
 
-TigerRetriever.JsonGenerator.prototype = {
+JsonGenerator.prototype = {
 
 
     recreateInitialJson: function () {
@@ -41,7 +40,7 @@ TigerRetriever.JsonGenerator.prototype = {
         };
     },
     makeMapBase: function () {
-        var utils = new TigerRetriever.utils;
+        var utils = require('./utils');
         var gapCount = 0;
         var landCount = 5;
         var mapBase = new Array(mapWidth * mapHeight);

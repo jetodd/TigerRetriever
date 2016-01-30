@@ -1,9 +1,7 @@
-var TigerRetriever = TigerRetriever || {};
-
-TigerRetriever.Boot = function(){};
+var Boot = function(){};
 
 //setting game configuration and loading the assets for the loading screen
-TigerRetriever.Boot.prototype = {
+Boot.prototype = {
     preload: function() {
         //assets we'll use in the loading screen
         this.load.image('preloadbar', 'assets/images/preloader-bar.png'); // not made yet
@@ -28,3 +26,5 @@ TigerRetriever.Boot.prototype = {
         this.state.start('Preload');
     }
 };
+
+module.exports = Boot;
