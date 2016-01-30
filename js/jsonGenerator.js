@@ -2,10 +2,11 @@ var TigerRetriever = TigerRetriever || {};
 
 TigerRetriever.JsonGenerator = function () {
 };
+
 var mapHeight = 6;
-var minLand = 4;
+var minLand = 3;
 var minGap = 2;
-var maxGap = 3;
+var maxGap = 4;
 var tileWidth = 45;
 var tileHeight = 45;
 var mapWidth = 300;
@@ -53,53 +54,51 @@ TigerRetriever.JsonGenerator.prototype = {
 
         mapBase.fill(1, startIndex, startIndex + 15);
         mapBase.fill(1, maxIndex - 15, maxIndex);
-        var landIndex = 1;
+        var spriteIndex = 1;
 
         for (i = 0; i < 15; i++) {
-            mapBase[startIndex + i] = landIndex;
-            landIndex++;
-            if (landIndex == 4) {
-                landIndex = 1;
+            mapBase[startIndex + i] = spriteIndex;
+            spriteIndex++;
+            if (spriteIndex == 4) {
+                spriteIndex = 1;
             }
         }
 
         // Generate array for map
         // 1 = land, 0 = gap
         for (i = startIndex + 15; i < maxIndex - 15; i++) {
-            // Enforce minimum amount of land
-            if (landCount < minLand && landCount > 0) {
-                mapBase[i] = landIndex;
-                landIndex++;
+            if ((gapCount == maxGap) || (landCount < minLand && landCount > 0)) {
+                mapBase[i] = spriteIndex;
+                spriteIndex++;
                 gapCount = 0;
                 landCount++;
-                // Enforce minimum amount of gaps as we can't fall down 1 tile wide gap
             } else if (gapCount < minGap && gapCount > 0) {
                 gapCount++;
                 mapBase[i] = 0;
                 landCount = 0;
-            } else {
+            }else {
                 if (utils.getRandomInt(0, 1) == 1) {
                     gapCount++;
                     mapBase[i] = 0;
                     landCount = 0;
                 } else {
-                    mapBase[i] = landIndex;
-                    landIndex++;
+                    mapBase[i] = spriteIndex;
+                    spriteIndex++;
                     landCount++;
                     gapCount = 0;
                 }
             }
 
-            if (landIndex == 4) {
-                landIndex = 1;
+            if (spriteIndex == 4) {
+                spriteIndex = 1;
             }
         }
 
         for (i = 15; i > 0; i--) {
-            mapBase[maxIndex - i] = landIndex;
-            landIndex++;
-            if (landIndex == 4) {
-                landIndex = 1;
+            mapBase[maxIndex - i] = spriteIndex;
+            spriteIndex++;
+            if (spriteIndex == 4) {
+                spriteIndex = 1;
             }
         }
 
