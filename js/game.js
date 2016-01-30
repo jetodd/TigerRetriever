@@ -33,9 +33,6 @@ TigerRetriever.Game.prototype = {
 
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
-
-        //sounds
-        this.coinSound = this.game.add.audio('coin');
     },
 
     //find objects in a Tiled layer that containt a property called "type" equal to a certain value
@@ -160,6 +157,7 @@ TigerRetriever.Game.prototype = {
         for (i = 0; i < size; i++) {
             //make new member of the herd
             var member = this.game.add.sprite(100 + i * 70, 100, 'player');
+            member.animations.add('right', [0,1,2,3,4,5,6], 10, true);
 
             //enable physics on the member
             this.game.physics.arcade.enable(member);
@@ -182,7 +180,7 @@ TigerRetriever.Game.prototype = {
     updateHerd: function() {
         this.herd.forEach(function(member) {
             this.game.physics.arcade.collide(member, this.blockedLayer, this.animalHit, null, this);
-
+            member.animations.play('right');
             //member has pending jumps
             if (member.jumpPoints.length) {
                 console.log(member.jumpPoints);
