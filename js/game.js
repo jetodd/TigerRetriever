@@ -7,6 +7,7 @@ TigerRetriever.Game.prototype = {
         this.game.time.advancedTiming = true;
     },
     create: function() {
+
         this.map = this.game.add.tilemap('level1');
 
         //the first parameter is the tileset name as specified in Tiled, the second is the key to the asset
