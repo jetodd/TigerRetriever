@@ -24,6 +24,8 @@ TigerRetriever.Game.prototype = {
         //resizes the game world to match the layer dimensions
         this.backgroundlayer.resizeWorld();
 
+        this.scoreText = this.game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
         this.createCandy();
 
         //create array of herd members
@@ -61,10 +63,13 @@ TigerRetriever.Game.prototype = {
             sprite[key] = element.properties[key];
         });
     },
+    collectCandy: function(player, collectable) {
+        collectable.destroy();
+    },
     update: function() {
         //collisions
         this.updateHerd();
-        //this.game.physics.arcade.overlap(this.player, this.candies, this.collect, null, this);
+        this.game.physics.arcade.overlap(this.herd, this.candies, this.collectCandy, null, this);
 
         var alive = false;
         this.herd.forEach(function (animal) {
@@ -87,15 +92,6 @@ TigerRetriever.Game.prototype = {
                 this.upKeyDownLastUpdate = true;
             } else {
                 this.upKeyDownLastUpdate = false;
-            }
-
-            if(!this.cursors.down.isDown && this.herd[0].isDucked && !this.pressingDown) {
-                //change image and update the body size for the physics engine
-                this.herd.forEach(function (animal) {
-                    animal.loadTexture('player');
-                    animal.body.setSize(animal.standDimensions.width, animal.standDimensions.height);
-                    animal.isDucked = false;
-                });
             }
 
             //restart the game if reaching the edge
@@ -133,30 +129,9 @@ TigerRetriever.Game.prototype = {
     gameOver: function() {
         this.game.state.start('Game');
     },
-    jumpHerd: function() {
-        var leader = this.herdLeader();
-
-        //lead can only jump when grounded
-        if (leader.body.blocked.down) {
-            var jumpPoint = leader.body.position;
-            this.herd.forEach(function (member) {
-                member.jumpPoints.push(jumpPoint);
-            });
-        }
-    },
-    playersDuck: function() {
-        this.herd.forEach(function (animal) {
-            //change image and update the body size for the physics engine
-            animal.loadTexture('playerDuck');
-            animal.body.setSize(animal.duckedDimensions.width, animal.duckedDimensions.height);
-
-            //we use this to keep track whether it's ducked or not
-            animal.isDucked = true;
-        });
-    },
     render: function()
     {
-        this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
+        //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
         //this.herd.forEach(function (animal) {
         //    this .game.debug.bodyInfo(animal, 0, 80);
         //}, this);
