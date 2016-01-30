@@ -19,7 +19,7 @@ TigerRetriever.JsonGenerator.prototype = {
 
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
-        layers.push(this.makeLayer(null, mapHeight, "objectsLayer",1,"objectgroup",true,mapWidth,0,0,objectsLayer));
+        layers.push(this.makeLayer(null, mapHeight, "objectsLayer", 1, "objectgroup", true, mapWidth, 0, 0, objectsLayer));
 
         tilesets.push(this.makeTileset(0, "..\/images\/ground.png", 1000, 45, 0, "tiles_spritesheet", 2,
             tileWidth, tileHeight));
@@ -70,7 +70,7 @@ TigerRetriever.JsonGenerator.prototype = {
                 mapBase[i] = landIndex;
                 landIndex++;
                 gapCount = 0;
-                landCount ++;
+                landCount++;
                 // Enforce minimum amount of gaps as we can't fall down 1 tile wide gap
             } else if (gapCount < minGap && gapCount > 0) {
                 gapCount++;
@@ -94,13 +94,13 @@ TigerRetriever.JsonGenerator.prototype = {
             }
         }
 
-         for (i = 15; i > 0; i--) {
-             mapBase[maxIndex - i] = landIndex;
-             landIndex++;
-             if (landIndex == 4) {
-                 landIndex = 1;
-             }
-         }
+        for (i = 15; i > 0; i--) {
+            mapBase[maxIndex - i] = landIndex;
+            landIndex++;
+            if (landIndex == 4) {
+                landIndex = 1;
+            }
+        }
 
         return mapBase;
     },
@@ -122,8 +122,6 @@ TigerRetriever.JsonGenerator.prototype = {
 
         if (objects) {
             layer.objects = objects;
-        } else {
-            console.log("No objects");
         }
 
         return layer;
@@ -142,38 +140,35 @@ TigerRetriever.JsonGenerator.prototype = {
             "width": width
         }
     },
-   getObjectLayer: function() {
-        return 
-                [{
-                 "gid":1,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "sprite":"candyyyyy",
-                     "type":"candy"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":226,
-                 "y":119
-                }]
+    getObjectLayer: function () {
+        return [{
+            "gid": 1,
+            "height": 0,
+            "name": "",
+            "properties": {
+                "sprite": "candyyyyy",
+                "type": "candy"
+            },
+            "type": "",
+            "visible": true,
+            "width": 0,
+            "x": 226,
+            "y": 119
+        }];
     }
 };
 
 var objectsLayer = [{
-                 "gid":1,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "sprite":"candyyyyy",
-                     "type":"candy"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":226,
-                 "y":119
-                }];
+    "gid": 1,
+    "height": 0,
+    "name": "",
+    "properties": {
+        "sprite": "candyyyyy",
+        "type": "candy"
+    },
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 512,
+    "y": 145
+}];
