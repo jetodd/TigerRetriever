@@ -1,8 +1,12 @@
 var TigerRetriever = TigerRetriever || {};
 
 TigerRetriever.Game = function(){
-    this.INIT_HERD_SIZE = 3;
+    this.INIT_HERD_SIZE = 15;
+    this.MEMBER_START_VARIANCE = 75;
+    this.HERD_START_POSITION = 0; //x coordinate at center of herd
+    this.MEMBER_OFFSET_TOLERANCE = 100;
 };
+
 TigerRetriever.Game.prototype = {
     preload: function() {
         this.game.time.advancedTiming = true;
@@ -71,16 +75,12 @@ TigerRetriever.Game.prototype = {
         //collisions
         this.updateHerd();
 
-        this.game.physics.arcade.overlap(this.herd, this.candies, this.collectCandy, null, this);
-
-        var alive = false;
-        this.herd.forEach(function (animal) {
-            if (animal.alive) {
-                alive = true;
-            }
-        });
-        if(alive) {
+        if(this.herd.some(function(member) { return member.alive; })) {
+            this.game.physics.arcade.overlap(this.herd, this.candies, this.collectCandy, null, this);
             this.herd.forEach(function (animal) {
+                //the members velocity offset
+                var median = math.median(this.herd.map(function (m) { return m.body.x; }));
+                
                 animal.body.velocity.x = 300;
             });
 
@@ -135,7 +135,7 @@ TigerRetriever.Game.prototype = {
     {
         //this.game.debug.text(this.game.time.fps || '--', 20, 70, "#00ff00", "40px Courier");
         //this.herd.forEach(function (animal) {
-        //    this .game.debug.bodyInfo(animal, 0, 80);
+        //    this.game.debug.bodyInfo(animal, 0, 80);
         //}, this);
     },
     pickZebraSprite: function() {
@@ -154,8 +154,11 @@ TigerRetriever.Game.prototype = {
         var members = [];
         for (var i = 0; i < size; i++) {
             //make new member of the herd
+            var herdPosition = this.HERD_START_POSITION;
+            var memberVariance = this.MEMBER_START_VARIANCE;
+            var offset = Math.random() * (memberVariance - -(memberVariance)) + -memberVariance;
             var sprite = this.pickZebraSprite();
-            var member = this.game.add.sprite(100 + i * 70, 100, 'zebra', sprite.spriteKey);
+            var member = this.game.add.sprite(herdPosition + offset, 100, 'zebra', sprite.spriteKey);
             member.animations.add('right', sprite.animationFrames, 10, true);
 
             //enable physics on the member
@@ -208,12 +211,12 @@ TigerRetriever.Game.prototype = {
         }, this);
     },
     herdLeader: function() {
-        var lead = this.herd[0];
-        for (i = 1; i < this.herd.length; i++) {
-            if (this.herd[i].x > lead.x) {
-                lead = this.herd[i];
+        return this.herd.reduce(function(currentLeader, nextMember) {
+            if (nextMember.x > currentLeader.x) {
+                return nextMember;
+            } else {
+                return currentLeader;
             }
-        }
-        return lead;
-     }
+        });
+    }
 };
