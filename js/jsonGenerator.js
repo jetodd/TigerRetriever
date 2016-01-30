@@ -12,15 +12,14 @@ var mapWidth = 300;
 
 TigerRetriever.JsonGenerator.prototype = {
     recreateInitialJson: function () {
-        var layers = [];
-        var tilesets = [];
+        var layers = [], tilesets = [];
         var background = new Array(mapWidth * mapHeight);
         background.fill(4);
 
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
-        layers.push(this.makeLayer(null, mapHeight, "objectsLayer", 1, "objectgroup", true, mapWidth, 0, 0, objectsLayer));
-        layers.push(this.makeLayer(null, mapHeight, "cloudsLayer", 1, "objectgroup", true, mapWidth, 0, 0, cloudsLayer))
+        layers.push(this.makeLayer(null, mapHeight, "objectsLayer", 1, "objectgroup", true, mapWidth, 0, 0, this.makeCandies()));
+        layers.push(this.makeLayer(null, mapHeight, "cloudsLayer", 1, "objectgroup", true, mapWidth, 0, 0, cloudsLayer));
 
         tilesets.push(this.makeTileset(0, "..\/images\/ground.png", 1000, 45, 0, "tiles_spritesheet", 2,
             tileWidth, tileHeight));
@@ -40,6 +39,15 @@ TigerRetriever.JsonGenerator.prototype = {
             "tileheight": tileHeight,
             "tilewidth": tileWidth
         };
+    },
+    makeCandies: function () {
+        var candies = [];
+
+        candies.push(this.makeCandyObject(300, 150));
+        candies.push(this.makeCandyObject(600, 150));
+        candies.push(this.makeCandyObject(800, 150));
+
+        return candies;
     },
     makeMapBase: function () {
         var utils = new TigerRetriever.utils;
@@ -141,8 +149,8 @@ TigerRetriever.JsonGenerator.prototype = {
             "width": width
         }
     },
-    getObjectLayer: function (x, y) {
-        return [{
+    makeCandyObject: function (x, y) {
+        return {
             "gid": 1,
             "height": 0,
             "name": "",
@@ -153,9 +161,9 @@ TigerRetriever.JsonGenerator.prototype = {
             "type": "",
             "visible": true,
             "width": 0,
-            "x": 226,
-            "y": 119
-        }];
+            "x": x,
+            "y": y
+        };
     }
 };
 
