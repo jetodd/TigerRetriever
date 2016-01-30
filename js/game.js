@@ -25,11 +25,11 @@ TigerRetriever.Game.prototype = {
         //resizes the game world to match the layer dimensions
         this.backgroundlayer.resizeWorld();
 
-        //create the herd
-        this.herd = new TigerRetriever.Game.Herd(this.INIT_HERD_SIZE, this.game);
+        //create array of herd members
+        this.herd = this.newHerd(this.INIT_HERD_SIZE);
 
         //the camera will follow the player in the world
-        this.game.camera.follow(this.herd.cameraFocus());
+        this.game.camera.follow(this.herdLeader());
 
         //move player with cursor keys
         this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -63,9 +63,7 @@ TigerRetriever.Game.prototype = {
     },
     update: function() {
         //collisions
-        this.herd.forEach(function(animal) {
-            this.game.physics.arcade.collide(animal, this.blockedLayer, this.animalHit, null, this);
-        }, this);
+        this.updateHerd();
 
         //only respond to keys and keep the speed if the player is alive
         //check herd still living animals
@@ -81,7 +79,7 @@ TigerRetriever.Game.prototype = {
             });
 
             if(this.cursors.up.isDown) {
-                this.playersJump();
+                this.jumpHerd(this.herdLeader().body.x);
             }
             else if(this.cursors.down.isDown) {
                 this.playersDuck();
@@ -132,10 +130,10 @@ TigerRetriever.Game.prototype = {
     gameOver: function() {
         this.game.state.start('Game');
     },
-    playersJump: function() {
-        this.herd.forEach(function (animal) {
-            if (animal.body.blocked.down) {
-                animal.body.velocity.y -= 700;
+    jumpHerd: function(x) {
+        this.herd.forEach(function (member) {
+            if (member.body.blocked.down) {
+                member.jumpPoints.push(x);
             }
         });
     },
@@ -155,42 +153,54 @@ TigerRetriever.Game.prototype = {
         this.herd.forEach(function (animal) {
             this .game.debug.bodyInfo(animal, 0, 80);
         }, this);
-    }
-};
+    },
+    newHerd: function(size)
+    {
+        var members = [];
+        for (i = 0; i < size; i++) {
+            //make new member of the herd
+            var member = this.game.add.sprite(100 + i * 70, 100, 'player');
 
-TigerRetriever.Game.Herd = function (size, game) {
-    this.game = game;
+            //enable physics on the member
+            this.game.physics.arcade.enable(member);
 
-    for (i = 0; i < size; i++) {
-        //make new member of the herd
-        var member = this.game.add.sprite(100 + i * 50, 100, 'player');
+            //player gravity
+            member.body.gravity.y = 1000;
 
-        //enable physics on the member
-        this.game.physics.arcade.enable(member);
+            //properties when the member is ducked and standing, so we can use in update()
+            var playerDuckImg = this.game.cache.getImage('playerDuck');
+            member.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
+            member.standDimensions = {width: member.width, height: member.height};
+            member.anchor.setTo(0.5, 1);
 
-        //player gravity
-        member.body.gravity.y = 1000;
+            member.jumpPoints = [];
 
-        //properties when the member is ducked and standing, so we can use in update()
-        var playerDuckImg = this.game.cache.getImage('playerDuck');
-        member.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
-        member.standDimensions = {width: member.width, height: member.height};
-        member.anchor.setTo(0.5, 1);
-
-        this.push(member);
-    }
-};
-
-//use an array as the base of the new object
-TigerRetriever.Game.Herd.prototype = Array.prototype;
-
-//focus is on the leading member
-TigerRetriever.Game.Herd.prototype.cameraFocus = function() {
-    var lead = this[0];
-    for (i = 1; i < this.length; i++) {
-        if (this[i].x > lead.x) {
-            lead = this[i];
+            members.push(member);
         }
-    }
-    return lead;
+        return members;
+    },
+    updateHerd: function() {
+        this.herd.forEach(function(member) {
+            this.game.physics.arcade.collide(member, this.blockedLayer, this.animalHit, null, this);
+
+            //member has pending jumps
+            if (member.jumpPoints.length) {
+                console.log(member.jumpPoints);
+                var nextX = member.jumpPoints[0];
+                if (member.body.x > nextX) {
+                    member.body.velocity.y -= 500;
+                    member.jumpPoints.shift();
+                }
+            }
+        }, this);
+    },
+    herdLeader: function() {
+        var lead = this.herd[0];
+        for (i = 1; i < this.herd.length; i++) {
+            if (this.herd[i].x > lead.x) {
+                lead = this.herd[i];
+            }
+        }
+        return lead;
+     }
 };
