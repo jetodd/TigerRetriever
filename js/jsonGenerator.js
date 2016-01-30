@@ -16,12 +16,12 @@ TigerRetriever.JsonGenerator.prototype = {
         var layers = [];
         var tilesets = [];
         var background = new Array(mapWidth * mapHeight);
-        background.fill(139);
+        background.fill(4);
 
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
 
-        tilesets.push(this.makeTileset(0, "..\/images\/background_spritesheet.png", 934, 790, 0, "tiles_spritesheet", 2,
+        tilesets.push(this.makeTileset(0, "..\/images\/ground.png", 1000, 45, 0, "tiles_spritesheet", 2,
             tileWidth, tileHeight));
 
         return this.generate(mapHeight, mapWidth, tileWidth, tileHeight, tilesets, layers);
@@ -52,13 +52,22 @@ TigerRetriever.JsonGenerator.prototype = {
 
         mapBase.fill(1, startIndex, startIndex + 15);
         mapBase.fill(1, maxIndex - 15, maxIndex);
+        var landIndex = 1;
+
+        for (i = 0; i < 15; i++) {
+            mapBase[startIndex + i] = landIndex;
+            landIndex++;
+            if (landIndex == 4) {
+                landIndex = 1;
+            }
+        }
 
         // Generate array for map
         // 1 = land, 0 = gap
         for (i = startIndex + 15; i < maxIndex - 15; i++) {
             if (landCount < minLand && landCount > 0) {
-                mapBase[i] = 1;
-                landCount++;
+                mapBase[i] = landIndex;
+                landIndex++;
                 gapCount = 0;
             } else {
                 if (utils.getRandomInt(0, 1) == 1) {
@@ -66,12 +75,29 @@ TigerRetriever.JsonGenerator.prototype = {
                     mapBase[i] = 0;
                     landCount = 0;
                 } else {
-                    mapBase[i] = 1;
-                    landCount++;
+                    mapBase[i] = landIndex;
+                    landIndex++;
                     gapCount = 0;
                 }
             }
+
+            if (landIndex == 4) {
+                landIndex = 1;
+            }
         }
+
+        var startLandTiles = 1;
+
+        
+
+        // for (i = 15; i > 0; i--) {
+        //     mapBase[maxIndex - i] = landIndex;
+        //     landIndex++;
+        //     if (landIndex == 4) {
+        //         landIndex = 1;
+        //     }
+        // }
+
         return mapBase;
     },
     makeLayer: function (data, height, name, opacity, type, visible, width, x, y, objects) {
