@@ -141,7 +141,7 @@ TigerRetriever.JsonGenerator.prototype = {
             "width": width
         }
     },
-    getObjectLayer: function () {
+    getObjectLayer: function (x, y) {
         return [{
             "gid": 1,
             "height": 0,

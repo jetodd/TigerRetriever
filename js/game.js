@@ -28,7 +28,8 @@ TigerRetriever.Game.prototype = {
         //resizes the game world to match the layer dimensions
         this.backgroundlayer.resizeWorld();
 
-        this.scoreText = this.game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+        this.score = 0;
+        this.scoreText = this.game.add.text(900, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#000' });
 
         this.createCandy();
         this.createClouds();
@@ -69,6 +70,8 @@ TigerRetriever.Game.prototype = {
         });
     },
     collectCandy: function(player, collectable) {
+        this.score += 10;
+        this.scoreText.text = "score: " + this.score;
         collectable.destroy();
     },
     update: function() {
