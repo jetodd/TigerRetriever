@@ -18,11 +18,13 @@ TigerRetriever.Preload.prototype = {
 
         this.load.tilemap('level1', null, levelJson, Phaser.Tilemap.TILED_JSON);
 
+        console.log(levelJson);
+
         this.load.spritesheet('zebra', 'assets/images/zebraaaaa.png',70,50,21,0,2);
         this.load.spritesheet('candyyyyy', 'assets/images/candyyyyy.png',40,40,4,0,2);
 
-        this.load.spritesheet('gameTiles', 'assets/images/ground.png', 45, 45, 3, 0, 2);
-        this.load.spritesheet('clouddddd', 'assets/images/othersprites.png', 110, 60, 5, 0, 2)
+        this.load.spritesheet('gameTiles', 'assets/images/ground.png', 45, 45, 4, 0, 2);
+        this.load.spritesheet('clouddddd', 'assets/images/othersprites.png', 110, 60, 5, 0, 2);
         this.load.image('playerDuck', 'assets/images/player_duck.png');
 
     },

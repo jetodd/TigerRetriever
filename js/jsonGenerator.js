@@ -19,8 +19,8 @@ TigerRetriever.JsonGenerator.prototype = {
 
         layers.push(this.makeLayer(background, mapHeight, "backgroundLayer", 1, "tilelayer", true, mapWidth, 0, 0));
         layers.push(this.makeLayer(this.makeMapBase(), mapHeight, "blockedLayer", 1, "tilelayer", true, mapWidth, 0, 0));
+        layers.push(this.makeLayer(null, mapHeight, "cloudsLayer", 1, "objectgroup", true, mapWidth, 0, 0, this.makeClouds()));
         layers.push(this.makeLayer(null, mapHeight, "objectsLayer", 1, "objectgroup", true, mapWidth, 0, 0, this.makeCandies()));
-        layers.push(this.makeLayer(null, mapHeight, "cloudsLayer", 1, "objectgroup", true, mapWidth, 0, 0, cloudsLayer));
 
         tilesets.push(this.makeTileset(0, "..\/images\/ground.png", 1000, 45, 0, "tiles_spritesheet", 2,
             tileWidth, tileHeight));
@@ -45,7 +45,7 @@ TigerRetriever.JsonGenerator.prototype = {
         var utils = new TigerRetriever.utils;
         var candies = [];
 
-        var candyX = 400;
+        var candyX = 600;
         // Between 150 and 200
         var candyY = 160;
 
@@ -62,6 +62,38 @@ TigerRetriever.JsonGenerator.prototype = {
         }
 
         return candies;
+    },
+    makeClouds: function () {
+        var utils = new TigerRetriever.utils;
+        var clouds = [];
+
+        var cloudX = 800;
+        // Between 150 and 200
+        var cloudY = 100;
+        clouds.push(this.makeCloudObject(300, 100, 0))
+
+        while (cloudX < mapWidth * tileWidth - (15 * tileWidth)) {
+            if (utils.getRandomInt(0, 1) == 1) {
+                cloudY -= utils.getRandomInt(0, 90);
+            } else {
+                cloudY += utils.getRandomInt(0, 70);
+            }
+
+
+            clouds.push(this.makeCloudObject(cloudX, cloudY, utils.getRandomInt(1, 4)));
+            cloudY = 100;
+            if (utils.getRandomInt(0,3) == 0) {
+                if (utils.getRandomInt(0, 1) == 1) {
+                cloudY -= utils.getRandomInt(0, 90);
+            } else {
+                cloudY += utils.getRandomInt(0, 70);
+            }
+            }
+            cloudX += utils.getRandomInt(200, 500);
+            cloudY = 100;
+        }
+
+        return clouds;
     },
     makeMapBase: function () {
         var utils = new TigerRetriever.utils;
@@ -168,7 +200,25 @@ TigerRetriever.JsonGenerator.prototype = {
             "name": "",
             "properties": {
                 "sprite": "candyyyyy",
-                "type": "candy"
+                "type": "candy",
+                "spriteKey": spriteId
+            },
+            "type": "",
+            "visible": true,
+            "width": 0,
+            "x": x,
+            "y": y
+        };
+    },
+    makeCloudObject: function (x, y, spriteId) {
+        return {
+            "gid": spriteId,
+            "height": 0,
+            "name": "",
+            "properties": {
+                "sprite": "clouddddd",
+                "type": "cloud",
+                "spriteKey": spriteId
             },
             "type": "",
             "visible": true,
@@ -194,17 +244,4 @@ var objectsLayer = [{
     "y": 145
 }];
 
-var cloudsLayer = [{
-    "gid": 1,
-    "height": 0,
-    "name": "",
-    "properties": {
-        "sprite": "clouddddd",
-        "type": "cloud"
-    },
-    "type": "",
-    "visible": true,
-    "width": 0,
-    "x": 300,
-    "y": 100
-}];
+

@@ -62,7 +62,7 @@ TigerRetriever.Game.prototype = {
     },
     //create a sprite from an object
     createFromTiledObject: function(element, group) {
-        var sprite = group.create(element.x, element.y, element.properties.sprite);
+        var sprite = group.create(element.x, element.y, element.properties.sprite, element.properties.spriteKey);
 
         //copy all properties to the sprite
         Object.keys(element.properties).forEach(function(key){
@@ -88,7 +88,6 @@ TigerRetriever.Game.prototype = {
                 var offset = 0;
                 if (rnorm(0, 10) > 28) {
                     animal.offset = (median - animal.body.x) / 2;
-                    console.log("Change offset: " + animal.offset);
                 }
                 animal.body.velocity.x = 300 + (animal.offset || 0);
             }, this);
@@ -195,6 +194,7 @@ TigerRetriever.Game.prototype = {
         result.forEach(function(element){
             this.createFromTiledObject(element, this.candies);
         }, this);
+
     },
     createClouds: function() {
         this.clouds = this.game.add.group();
