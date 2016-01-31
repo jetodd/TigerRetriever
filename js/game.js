@@ -29,6 +29,7 @@ TigerRetriever.Game.prototype = {
         this.backgroundlayer.resizeWorld();
 
         this.score = 0;
+        this.scoreText = this.game.add.text(600, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#2485e5' });
 
         this.createCandy();
         this.createClouds();
@@ -77,6 +78,10 @@ TigerRetriever.Game.prototype = {
         this.updateHerd();
         //the camera will follow the player in the world
         this.game.camera.follow(this.herdLeader());
+        var herdLeader = this.herdLeader();
+
+        this.scoreText.x = herdLeader.body.x;
+        this.scoreText.text = "score: " + this.score;
 
         if(this.herd.some(function(member) { return member.alive; })) {
             this.game.physics.arcade.overlap(this.herd, this.candies, this.collectCandy, null, this);
@@ -129,7 +134,6 @@ TigerRetriever.Game.prototype = {
             //go to gameover after a few miliseconds
             if (!this.gameOverScheduled && gameOver) {
                 this.gameOverScheduled = true;
-                this.game.add.text(animal.x + 500, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#000' });
                 this.game.time.events.add(1500, this.gameOver, this);
             } else {
                 console.log("Game over already scheduled");
@@ -227,7 +231,6 @@ TigerRetriever.Game.prototype = {
                     console.log("No more animals alive game over time");
                     if (!this.gameOverScheduled) {
                         this.gameOverScheduled = true;
-                        this.game.add.text(member.x + 500, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#000' });
                         this.game.time.events.add(1500, this.gameOver, this);
                     } else {
                         console.log("Game over already scheduled");
