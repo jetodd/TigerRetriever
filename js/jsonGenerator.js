@@ -94,6 +94,8 @@ TigerRetriever.JsonGenerator.prototype = {
             cloudY = 100;
         }
 
+        clouds.push(this.makeCloudObject(mapWidth * tileWidth - 200, 100, 4));
+
         return clouds;
     },
     makeMapBase: function () {
