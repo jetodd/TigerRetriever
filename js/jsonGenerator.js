@@ -42,21 +42,24 @@ TigerRetriever.JsonGenerator.prototype = {
         };
     },
     makeCandies: function () {
+        var utils = new TigerRetriever.utils;
         var candies = [];
-
 
         var candyX = 400;
         // Between 150 and 200
-        var candyY = 150;
+        var candyY = 160;
 
-        for (var i = 0; i < 50; i++) {
+        while (candyX < mapWidth * tileWidth - (15 * tileWidth)) {
+            if (utils.getRandomInt(0, 1) == 1) {
+                candyY -= utils.getRandomInt(0, 40);
+            } else {
+                candyY += utils.getRandomInt(0, 40);
+            }
 
-            candies.push(this.makeCandyObject(candyX, candyY));
-            candyX += 200;
+            candies.push(this.makeCandyObject(candyX, candyY, utils.getRandomInt(0, 3)));
+            candyX += utils.getRandomInt(100, 250);
+            candyY = 150;
         }
-
-        candies.push(this.makeCandyObject(600, 150));
-        candies.push(this.makeCandyObject(800, 150));
 
         return candies;
     },
@@ -158,9 +161,9 @@ TigerRetriever.JsonGenerator.prototype = {
             "width": width
         }
     },
-    makeCandyObject: function (x, y) {
+    makeCandyObject: function (x, y, spriteId) {
         return {
-            "gid": 1,
+            "gid": spriteId,
             "height": 0,
             "name": "",
             "properties": {
