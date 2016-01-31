@@ -80,7 +80,7 @@ TigerRetriever.JsonGenerator.prototype = {
             }
 
 
-            clouds.push(this.makeCloudObject(cloudX, cloudY, utils.getRandomInt(1, 4)));
+            clouds.push(this.makeCloudObject(cloudX, cloudY, utils.getRandomInt(1, 3)));
             cloudY = 100;
             if (utils.getRandomInt(0,3) == 0) {
                 if (utils.getRandomInt(0, 1) == 1) {
@@ -88,6 +88,7 @@ TigerRetriever.JsonGenerator.prototype = {
             } else {
                 cloudY += utils.getRandomInt(0, 70);
             }
+            cloudX += 110;
             }
             cloudX += utils.getRandomInt(200, 500);
             cloudY = 100;
