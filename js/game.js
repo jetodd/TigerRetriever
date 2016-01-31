@@ -222,11 +222,9 @@ TigerRetriever.Game.prototype = {
 
             // If an animal doesn't collide with the blocked layer they don't die, quick hack to fix this.
             if (member.body.y > 300) {
-                console.log("Killing non collided animal");
                 member.alive = false;
 
                 var livingAnimals = this.livingAnimalCount();
-                console.log("Living animal count: " + livingAnimals);
 
                 if (livingAnimals === 0) {
                     console.log("No more animals alive game over time");
