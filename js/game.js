@@ -107,6 +107,7 @@ TigerRetriever.Game.prototype = {
                 this.game.state.start('Game');
             }
         }
+
     },
     animalHit: function(animal, blockedLayer) {
         //if hits on the right side, die
@@ -117,9 +118,6 @@ TigerRetriever.Game.prototype = {
             //stop moving to the right
             animal.body.velocity.x = 0;
 
-            //change sprite image
-            //animal.loadTexture('playerDead');
-
             //check herd still living animals
             var gameOver = true;
             this.herd.forEach(function (animal) {
@@ -129,13 +127,17 @@ TigerRetriever.Game.prototype = {
             });
 
             //go to gameover after a few miliseconds
-            if (gameOver) {
+            if (!this.gameOverScheduled && gameOver) {
+                this.gameOverScheduled = true;
                 this.game.add.text(animal.x + 500, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#000' });
                 this.game.time.events.add(1500, this.gameOver, this);
+            } else {
+                console.log("Game over already scheduled");
             }
         }
     },
     gameOver: function() {
+        this.gameOverScheduled = false;
         this.game.state.start('Game');
     },
     render: function()
@@ -167,16 +169,13 @@ TigerRetriever.Game.prototype = {
             var sprite = this.pickZebraSprite();
             var member = this.game.add.sprite(herdPosition + offset, 100, 'zebra', sprite.spriteKey);
             member.animations.add('right', sprite.animationFrames, 10, true);
-
+            member.id = i;
             //enable physics on the member
             this.game.physics.arcade.enable(member);
 
             //player gravity
             member.body.gravity.y = 1000;
 
-            //properties when the member is ducked and standing, so we can use in update()
-            var playerDuckImg = this.game.cache.getImage('playerDuck');
-            member.duckedDimensions = {width: playerDuckImg.width, height: playerDuckImg.height};
             member.standDimensions = {width: member.width, height: member.height};
             member.anchor.setTo(0.5, 1);
 
@@ -203,9 +202,43 @@ TigerRetriever.Game.prototype = {
             this.createFromTiledObject(element, this.clouds);
         }, this);
     },
+    livingAnimalCount: function() {
+        var aliveCount = 0;
+        this.herd.forEach(function(member) {
+            if (member.alive) {
+                aliveCount++;
+            }
+        });
+        return aliveCount;
+    },
     updateHerd: function() {
         this.herd.forEach(function(member) {
             this.game.physics.arcade.collide(member, this.blockedLayer, this.animalHit, null, this);
+
+            if (member.alive) {
+                console.log("x: " + member.body.x + " y:" + member.body.y + " id: " + member.id);
+            }
+
+
+            // If an animal doesn't collide with the blocked layer they don't die, quick hack to fix this.
+            if (member.body.y > 300) {
+                console.log("Killing non collided animal");
+                member.alive = false;
+
+                var livingAnimals = this.livingAnimalCount();
+                console.log("Living animal count: " + livingAnimals);
+
+                if (livingAnimals === 0) {
+                    console.log("No more animals alive game over time");
+                    if (!this.gameOverScheduled) {
+                        this.gameOverScheduled = true;
+                        this.game.add.text(member.x + 500, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#000' });
+                        this.game.time.events.add(1500, this.gameOver, this);
+                    } else {
+                        console.log("Game over already scheduled");
+                    }
+                }
+            }
 
             member.animations.play('right');
 

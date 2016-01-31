@@ -18,8 +18,6 @@ TigerRetriever.Preload.prototype = {
 
         this.load.tilemap('level1', null, levelJson, Phaser.Tilemap.TILED_JSON);
 
-        console.log(levelJson);
-
         this.load.spritesheet('zebra', 'assets/images/zebraaaaa.png',70,50,21,0,2);
         this.load.spritesheet('candyyyyy', 'assets/images/candyyyyy.png',40,40,4,0,2);
 
