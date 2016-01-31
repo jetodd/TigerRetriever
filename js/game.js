@@ -77,6 +77,8 @@ TigerRetriever.Game.prototype = {
     update: function() {
         //collisions
         this.updateHerd();
+        //the camera will follow the player in the world
+        this.game.camera.follow(this.herdLeader());
 
         if(this.herd.some(function(member) { return member.alive; })) {
             this.game.physics.arcade.overlap(this.herd, this.candies, this.collectCandy, null, this);
