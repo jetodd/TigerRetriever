@@ -29,7 +29,6 @@ TigerRetriever.Game.prototype = {
         this.backgroundlayer.resizeWorld();
 
         this.score = 0;
-        this.scoreText = this.game.add.text(900, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#000' });
 
         this.createCandy();
         this.createClouds();
@@ -71,7 +70,6 @@ TigerRetriever.Game.prototype = {
     },
     collectCandy: function(player, collectable) {
         this.score += 10;
-        this.scoreText.text = "score: " + this.score;
         collectable.destroy();
     },
     update: function() {
@@ -133,6 +131,7 @@ TigerRetriever.Game.prototype = {
 
             //go to gameover after a few miliseconds
             if (gameOver) {
+                this.game.add.text(animal.x + 500, 16, 'score: ' + this.score, { fontSize: '32px', fill: '#000' });
                 this.game.time.events.add(1500, this.gameOver, this);
             }
         }
