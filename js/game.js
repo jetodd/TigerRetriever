@@ -1,10 +1,10 @@
 var TigerRetriever = TigerRetriever || {};
 
 TigerRetriever.Game = function(){
-    this.INIT_HERD_SIZE = 15;
+    this.INIT_HERD_SIZE = 10;
     this.MEMBER_START_VARIANCE = 75;
     this.HERD_START_POSITION = 0; //x coordinate at center of herd
-    this.MEMBER_OFFSET_TOLERANCE = 100;
+    this.MEMBER_OFFSET_TOLERANCE = 200;
 };
 
 TigerRetriever.Game.prototype = {
@@ -83,8 +83,12 @@ TigerRetriever.Game.prototype = {
             this.herd.forEach(function (animal) {
                 //the members velocity offset
                 var median = math.median(this.herd.map(function (m) { return m.body.x; }));
-                
-                animal.body.velocity.x = 300;
+                var offset = 0;
+                if (rnorm(0, 10) > 28) {
+                    animal.offset = (median - animal.body.x) / 2;
+                    console.log("Change offset: " + animal.offset);
+                }
+                animal.body.velocity.x = 300 + (animal.offset || 0);
             }, this);
 
             if (this.cursors.up.isDown && !this.upKeyDownLastUpdate) {

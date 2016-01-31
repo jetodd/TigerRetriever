@@ -19,7 +19,8 @@
   "homepage": "https://github.com/josh-taylr/TigerRetriever#readme",
   "dependencies": {
     "mathjs": "^2.6.0",
-    "phaser": "^2.4.4"
+    "phaser": "^2.4.4",
+    "randgen": "^0.1.0"
   },
   "devDependencies": {
     "http-server": "^0.8.5"
