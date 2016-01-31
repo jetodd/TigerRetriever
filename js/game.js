@@ -87,12 +87,12 @@ TigerRetriever.Game.prototype = {
             this.game.physics.arcade.overlap(this.herd, this.candies, this.collectCandy, null, this);
             this.herd.forEach(function (animal) {
                 //the members velocity offset
-                var median = math.median(this.herd.map(function (m) { return m.body.x; }));
-                var offset = 0;
-                if (rnorm(0, 10) > 28) {
-                    animal.offset = (median - animal.body.x) / 2;
-                }
-                animal.body.velocity.x = 300 + (animal.offset || 0);
+//                var median = math.median(this.herd.map(function (m) { return m.body.x; }));
+//                var offset = 0;
+//                if (rnorm(0, 10) > 28) {
+//                    animal.offset = (median - animal.body.x) / 2;
+//                }
+                animal.body.velocity.x = 300; // + (animal.offset || 0);
             }, this);
 
             if (this.cursors.up.isDown && !this.upKeyDownLastUpdate) {
@@ -169,7 +169,8 @@ TigerRetriever.Game.prototype = {
             //make new member of the herd
             var herdPosition = this.HERD_START_POSITION;
             var memberVariance = this.MEMBER_START_VARIANCE;
-            var offset = Math.random() * (memberVariance - -(memberVariance)) + -memberVariance;
+//            var offset = Math.random() * (memberVariance - -(memberVariance)) + -memberVariance;
+            var offset = i * 30;
             var sprite = this.pickZebraSprite();
             var member = this.game.add.sprite(herdPosition + offset, 100, 'zebra', sprite.spriteKey);
             member.animations.add('right', sprite.animationFrames, 10, true);
