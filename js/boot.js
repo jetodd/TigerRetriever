@@ -1,3 +1,5 @@
+var exports = exports || function(){};
+
 var TigerRetriever = TigerRetriever || {};
 
 TigerRetriever.Boot = function(){};
