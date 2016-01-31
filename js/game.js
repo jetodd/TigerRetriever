@@ -215,11 +215,6 @@ TigerRetriever.Game.prototype = {
         this.herd.forEach(function(member) {
             this.game.physics.arcade.collide(member, this.blockedLayer, this.animalHit, null, this);
 
-            if (member.alive) {
-                console.log("x: " + member.body.x + " y:" + member.body.y + " id: " + member.id);
-            }
-
-
             // If an animal doesn't collide with the blocked layer they don't die, quick hack to fix this.
             if (member.body.y > 300) {
                 console.log("Killing non collided animal");
